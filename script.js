@@ -2,31 +2,36 @@ $('.search-button').on('click', function () {
       $.ajax({
             url: 'http://www.omdbapi.com/?apikey=80dfc363&s=' + $('.input-keyword').val(),
             success: results => {
-                  console.log(results);
-                  const movies = results.Search;
-                  let cards = "";
 
-                  movies.forEach(m => {
-                        cards += showCards(m);
-                  });
+                  if (results.Response === 'True') {
+                        const movies = results.Search;
+                        let cards = "";
 
-                  $('.movie-container').html(cards);
-
-                  // ketika tombol detail diklik
-                  $('.modal-detail-button').on('click', function () {
-                        $.ajax({
-                              url: 'http://www.omdbapi.com/?apikey=80dfc363&i=' + $(this).data('imdbid'),
-                              success: m => {
-                                    console.log(m);
-                                    const movieDetail = showMovieDetail(m);
-
-                                    $('.modal-body').html(movieDetail);
-                              },
-                              error: (err) => {
-                                    console.log(err.responseText);
-                              }
+                        movies.forEach(m => {
+                              cards += showCards(m);
                         });
-                  });
+
+                        $('.movie-container').html(cards);
+
+                        // ketika tombol detail diklik
+                        $('.modal-detail-button').on('click', function () {
+                              $.ajax({
+                                    url: 'http://www.omdbapi.com/?apikey=80dfc363&i=' + $(this).data('imdbid'),
+                                    success: m => {
+                                          console.log(m);
+                                          const movieDetail = showMovieDetail(m);
+
+                                          $('.modal-body').html(movieDetail);
+                                    },
+                                    error: (err) => {
+                                          console.log(err.responseText);
+                                    }
+                              });
+                        });
+
+                  } else if (results.Response === 'False') {
+                        $('.movie-container').html(movieNotFound());
+                  }
 
             },
             error: (err) => {
@@ -36,10 +41,10 @@ $('.search-button').on('click', function () {
 });
 
 
-
+// fungsi menampilkan daftar film
 function showCards(m) {
       return `
-            <div class="col-md-4 my-5">
+            <div class="col-md-4 my-4">
                   <div class="card">
                         <img class="card-img-top" src="${m.Poster}" alt="movie-poster">
                         <div class="card-body">
@@ -53,6 +58,7 @@ function showCards(m) {
 }
 
 
+// fungsi menampilkan detail film
 function showMovieDetail(m) {
       return `
             <div class="container-fluid">
@@ -74,5 +80,18 @@ function showMovieDetail(m) {
                         </div>
                   </div>
             </div
+      `;
+}
+
+
+function movieNotFound() {
+      return `
+            <div class="container">
+                  <div class="row mt-5">
+                        <div class="col-md">
+                              <h1 class="text-center">Movie not found</h1>
+                        </div>
+                  </div>
+            </div>
       `;
 }
