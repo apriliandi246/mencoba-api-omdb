@@ -31,6 +31,7 @@ $('.search-button').on('click', function () {
 
                   } else if (results.Response === 'False') {
                         $('.movie-container').html(movieNotFound());
+                        return false;
                   }
 
             },
