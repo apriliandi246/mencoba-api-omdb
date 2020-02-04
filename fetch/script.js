@@ -15,6 +15,7 @@ searchButton.addEventListener('click', function () {
                   });
 
                   const movieContainer = document.querySelector('.movie-container');
+
                   movieContainer.innerHTML = cards;
 
                   // ketika tombol detail movie diklik
@@ -28,6 +29,7 @@ searchButton.addEventListener('click', function () {
                                     .then(m => {
                                           const movieDetail = showMovieDetail(m);
                                           const modalBody = document.querySelector('.modal-body');
+
                                           modalBody.innerHTML = movieDetail;
                                     });
                         });
