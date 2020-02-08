@@ -22,19 +22,28 @@ document.addEventListener('click', async function (e) {
 });
 
 
-async function getMovieDetail(imdbid) {
-      let response = await fetch('http://www.omdbapi.com/?apikey=80dfc363&i=' + imdbid);
-      return await response.json();
-}
-
-
+// fungsi menampikan detail movie
 function updateUIDetail(m) {
       const movieDetail = showMovieDetail(m);
       const modalBody = document.querySelector('.modal-body');
       modalBody.innerHTML = movieDetail;
 }
 
+// fungsi menampilkan semua movie yang dicari
+function updateUI(movies) {
+      let cards = '';
+      movies.forEach(m => cards += showCards(m));
+      const movieContainer = document.querySelector('.movie-container');
+      movieContainer.innerHTML = cards;
+}
 
+// funsgi mengambil detail data movie dari api
+async function getMovieDetail(imdbid) {
+      let response = await fetch('http://www.omdbapi.com/?apikey=80dfc363&i=' + imdbid);
+      return await response.json();
+}
+
+// funsgi mengambil data movie dari api
 function getMovies(keyword) {
       return fetch('http://www.omdbapi.com/?apikey=80dfc363&s=' + keyword)
             .then(response => {
@@ -53,15 +62,6 @@ function getMovies(keyword) {
             });
 }
 
-
-function updateUI(movies) {
-      let cards = '';
-      movies.forEach(m => cards += showCards(m));
-      const movieContainer = document.querySelector('.movie-container');
-      movieContainer.innerHTML = cards;
-}
-
-
 // fungsi menampilkan daftar film
 function showCards(m) {
       return `
@@ -77,7 +77,6 @@ function showCards(m) {
             </div>
       `;
 }
-
 
 // fungsi menampilkan detail film
 function showMovieDetail(m) {
