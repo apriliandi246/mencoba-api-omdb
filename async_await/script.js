@@ -2,9 +2,13 @@
 const searchButton = document.querySelector('.search-button');
 
 searchButton.addEventListener('click', async function () {
-      const inputKeyword = document.querySelector('.input-keyword');
-      const movies = await getMovies(inputKeyword.value);
-      updateUI(movies);
+      try {
+            const inputKeyword = document.querySelector('.input-keyword');
+            const movies = await getMovies(inputKeyword.value);
+            updateUI(movies);
+      } catch (err) {
+            alert(err);
+      }
 });
 
 
@@ -31,10 +35,22 @@ function updateUIDetail(m) {
 }
 
 
-async function getMovies(keyword) {
-      let response = await fetch('http://www.omdbapi.com/?apikey=80dfc363&s=' + keyword);
-      let data = await response.json();
-      return data.Search;
+function getMovies(keyword) {
+      return fetch('http://www.omdbapi.com/?apikey=80dfc363&s=' + keyword)
+            .then(response => {
+                  if (!response.ok) {
+                        throw new Error(response.statusText);
+                  }
+
+                  return response.json();
+            })
+            .then(response => {
+                  if (response.Response === "False") {
+                        throw new Error(response.Error);
+                  }
+
+                  return response.Search;
+            });
 }
 
 
