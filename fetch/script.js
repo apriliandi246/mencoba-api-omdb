@@ -2,46 +2,46 @@
 const searchButton = document.querySelector('.search-button');
 
 searchButton.addEventListener('click', function () {
-      const inputKeyword = document.querySelector('.input-keyword');
+   const inputKeyword = document.querySelector('.input-keyword');
 
-      fetch('http://www.omdbapi.com/?apikey=80dfc363&s=' + inputKeyword.value)
-            .then(response => response.json())
-            .then(response => {
-                  const movies = response.Search;
-                  let cards = '';
+   fetch('http://www.omdbapi.com/?apikey=80dfc363&s=' + inputKeyword.value)
+      .then(response => response.json())
+      .then(response => {
+         let cards = '';
+         const movies = response.Search;
 
-                  movies.forEach(m => {
-                        cards += showCards(m);
+         movies.forEach(m => {
+            cards += showCards(m);
+         });
+
+         const movieContainer = document.querySelector('.movie-container');
+         movieContainer.innerHTML = cards;
+
+         // ketika tombol detail movie diklik
+         const modalDetailButton = document.querySelectorAll('.modal-detail-button');
+
+         modalDetailButton.forEach(btn => {
+            btn.addEventListener('click', function () {
+               const imdbid = this.dataset.imdbid;
+
+               fetch('http://www.omdbapi.com/?apikey=80dfc363&i=' + imdbid)
+                  .then(response => response.json())
+                  .then(m => {
+                     const movieDetail = showMovieDetail(m);
+                     const modalBody = document.querySelector('.modal-body');
+
+                     modalBody.innerHTML = movieDetail;
                   });
-
-                  const movieContainer = document.querySelector('.movie-container');
-
-                  movieContainer.innerHTML = cards;
-
-                  // ketika tombol detail movie diklik
-                  const modalDetailButton = document.querySelectorAll('.modal-detail-button');
-                  modalDetailButton.forEach(btn => {
-                        btn.addEventListener('click', function () {
-                              const imdbid = this.dataset.imdbid;
-
-                              fetch('http://www.omdbapi.com/?apikey=80dfc363&i=' + imdbid)
-                                    .then(response => response.json())
-                                    .then(m => {
-                                          const movieDetail = showMovieDetail(m);
-                                          const modalBody = document.querySelector('.modal-body');
-
-                                          modalBody.innerHTML = movieDetail;
-                                    });
-                        });
-                  });
-            })
+            });
+         });
+      })
 });
 
 
 
 // fungsi menampilkan daftar film
 function showCards(m) {
-      return `
+   return `
             <div class="col-md-4 my-4">
                   <div class="card">
                         <img class="card-img-top" src="${m.Poster}" alt="movie-poster">
@@ -59,7 +59,7 @@ function showCards(m) {
 
 // fungsi menampilkan detail film
 function showMovieDetail(m) {
-      return `
+   return `
             <div class="container-fluid">
                   <div class="row">
                         <div class="col-md-3">
@@ -84,7 +84,7 @@ function showMovieDetail(m) {
 
 
 function movieNotFound() {
-      return `
+   return `
             <div class="container">
                   <div class="row mt-5">
                         <div class="col-md">

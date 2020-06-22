@@ -1,50 +1,50 @@
 $('.search-button').on('click', function () {
-      $.ajax({
-            url: 'http://www.omdbapi.com/?apikey=80dfc363&s=' + $('.input-keyword').val(),
-            success: results => {
+   $.ajax({
+      url: 'http://www.omdbapi.com/?apikey=80dfc363&s=' + $('.input-keyword').val(),
+      success: results => {
 
-                  if (results.Response === 'True') {
-                        const movies = results.Search;
-                        let cards = "";
+         if (results.Response === 'True') {
+            const movies = results.Search;
+            let cards = "";
 
-                        movies.forEach(m => {
-                              cards += showCards(m);
-                        });
+            movies.forEach(m => {
+               cards += showCards(m);
+            });
 
-                        $('.movie-container').html(cards);
+            $('.movie-container').html(cards);
 
-                        // ketika tombol detail diklik
-                        $('.modal-detail-button').on('click', function () {
-                              $.ajax({
-                                    url: 'http://www.omdbapi.com/?apikey=80dfc363&i=' + $(this).data('imdbid'),
-                                    success: m => {
-                                          console.log(m);
-                                          const movieDetail = showMovieDetail(m);
+            // ketika tombol detail diklik
+            $('.modal-detail-button').on('click', function () {
+               $.ajax({
+                  url: 'http://www.omdbapi.com/?apikey=80dfc363&i=' + $(this).data('imdbid'),
+                  success: m => {
+                     console.log(m);
+                     const movieDetail = showMovieDetail(m);
 
-                                          $('.modal-body').html(movieDetail);
-                                    },
-                                    error: (err) => {
-                                          console.log(err.responseText);
-                                    }
-                              });
-                        });
-
-                  } else if (results.Response === 'False') {
-                        $('.movie-container').html(movieNotFound());
-                        return false;
+                     $('.modal-body').html(movieDetail);
+                  },
+                  error: (err) => {
+                     console.log(err.responseText);
                   }
+               });
+            });
 
-            },
-            error: (err) => {
-                  console.log(err.reponseText);
-            }
-      });
+         } else if (results.Response === 'False') {
+            $('.movie-container').html(movieNotFound());
+            return false;
+         }
+
+      },
+      error: (err) => {
+         console.log(err.reponseText);
+      }
+   });
 });
 
 
 // fungsi menampilkan daftar film
 function showCards(m) {
-      return `
+   return `
             <div class="col-md-4 my-4">
                   <div class="card">
                         <img class="card-img-top" src="${m.Poster}" alt="movie-poster">
@@ -61,7 +61,7 @@ function showCards(m) {
 
 // fungsi menampilkan detail film
 function showMovieDetail(m) {
-      return `
+   return `
             <div class="container-fluid">
                   <div class="row">
                         <div class="col-md-3">
@@ -86,7 +86,7 @@ function showMovieDetail(m) {
 
 
 function movieNotFound() {
-      return `
+   return `
             <div class="container">
                   <div class="row mt-5">
                         <div class="col-md">
